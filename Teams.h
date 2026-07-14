@@ -16,4 +16,23 @@ public:
     ~Team() = default;
 };
 
+struct MotivationKey {
+    int motivation;
+    int teamId;
+
+    explicit MotivationKey(int motivation = 0, int teamId = 0)
+        : motivation(motivation), teamId(teamId) {}
+
+    bool operator==(const MotivationKey& other) const {
+        return motivation == other.motivation && teamId == other.teamId;
+    }
+    bool operator<(const MotivationKey& other) const {
+        if (motivation != other.motivation) return motivation < other.motivation;
+        return teamId < other.teamId;
+    }
+    bool operator>(const MotivationKey& other) const {
+        return other < *this;
+    }
+};
+
 #endif //TEAMS_H

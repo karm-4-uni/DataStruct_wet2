@@ -14,11 +14,15 @@
 #define RACENION26B2_H_
 #include "wet2util.h"
 #include "ContestantsAndTeamsUF.h"
+#include "AVLTree.h"
+#include "Teams.h"
 
 
 class Racenion {
 private:
 	ContestantsAndTeamsUF uf;
+	AVLTree<Team, int> teamsById;  // we have to modify the AVLTree
+	AVLTree<Team, MotivationKey> teamsByMotivation;
 
 public:
 	// <DO-NOT-MODIFY> {
