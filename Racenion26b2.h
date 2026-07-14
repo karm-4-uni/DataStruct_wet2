@@ -13,13 +13,12 @@
 #ifndef RACENION26B2_H_
 #define RACENION26B2_H_
 #include "wet2util.h"
+#include "ContestantsAndTeamsUF.h"
 
 
 class Racenion {
 private:
-	//
-	// Here you may add anything you need to implement your Racenion class
-	//
+	ContestantsAndTeamsUF uf;
 
 public:
 	// <DO-NOT-MODIFY> {
