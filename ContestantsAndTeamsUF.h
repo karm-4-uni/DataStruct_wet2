@@ -2,11 +2,10 @@
 #ifndef UNIONFIND_H
 #define UNIONFIND_H
 
-#include <memory>
+// #include <memory>
 #include "HashTable.h"
 #include "wet2util.h"
 
-using namespace std;
 
 struct NodeUF {
     int contestantId = 0;
@@ -18,6 +17,9 @@ struct NodeUF {
     int RelativeMissionsOff = 0;
     Skill relativeSkill;
     bool isEliminated = false;   // set once, at the root, when remove_team happens
+
+    NodeUF();
+    ~NodeUF() = default;
 };
 
 class ContestantsAndTeamsUF {
@@ -36,7 +38,7 @@ public:
 
     NodeUF* Find(int contestantId);
 
-    void UnionNodes(NodeUF* recruitingRoot, NodeUF* recruitedRoot);
+    NodeUF* UnionNodes(NodeUF* recruitingRoot, NodeUF* recruitedRoot); // (return ptr to the new root)
 
     Skill getEffectiveSkill(int contestantId);
 

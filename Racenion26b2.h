@@ -21,7 +21,7 @@
 class Racenion {
 private:
 	ContestantsAndTeamsUF uf;
-	AVLTree<Team, int> teamsById;  // we have to modify the AVLTree
+	AVLTree<Team, int> teamsById;     // we have to modify the AVLTrees
 	AVLTree<Team, MotivationKey> teamsByMotivation;
 
 public:

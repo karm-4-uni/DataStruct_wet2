@@ -9,11 +9,13 @@ class Team {
     NodeUF* rootNodeUF = nullptr;
     int teamExp = 0;
     int totalMotivation = 0;
-    int memberCount = 0;
+    int memberCnt = 0;
+    Skill totTeamSkill = Skill(); // for duel
 
 public:
     Team();
     ~Team() = default;
+    void addContestantToTeam(NodeUF* newConstant);
 };
 
 struct MotivationKey {
