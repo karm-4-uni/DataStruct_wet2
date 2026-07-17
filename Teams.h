@@ -25,7 +25,17 @@ public:
 int getTeamExp() const {
         return teamExp;
     }
+bool isEmpty() const {
+        return rootNodeUF;
+    }
 
+    Skill* getTeamSkills()  {
+        return  &totTeamSkill ;
+    }
+
+    void addExp(int add_i) {
+        teamExp += add_i;
+    }
 };
 
 struct MotivationKey {
