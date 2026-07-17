@@ -12,7 +12,7 @@ StatusType Racenion::add_team(int teamId) {
 	if(teamId <= 0) {
 		return  StatusType::INVALID_INPUT;
 	}
-	if (teamsById.find(teamId)) {
+	if (teamsById.search(teamId)) {
 	return StatusType::FAILURE;
 	}
 	try {
@@ -21,7 +21,7 @@ StatusType Racenion::add_team(int teamId) {
 		MotivationKey secondKey = MotivationKey(teamId);
 		teamsByMotivation.insert(newteam,secondKey);
 
-
+return  StatusType::SUCCESS;
 	} catch (const std::bad_alloc&) {
 		return  StatusType::ALLOCATION_ERROR;
 	}
@@ -29,7 +29,23 @@ StatusType Racenion::add_team(int teamId) {
 }
 
 StatusType Racenion::remove_team(int teamId) {
-	return StatusType::FAILURE;
+	if(teamId <= 0 ) {
+		return  StatusType::INVALID_INPUT;
+	}
+	if(!teamsById.search(teamId)) {
+		return StatusType::FAILURE; // team dosnt exist
+	}
+	try {
+		int curr_Motivation = teamsById.find(teamId)->gettotalMotivation();
+		teamsById.remove( teamId );
+		MotivationKey curr_team_motivation_key = MotivationKey(curr_Motivation,
+			teamId);
+		teamsByMotivation.remove(curr_team_motivation_key);
+
+		return  StatusType::SUCCESS;
+	} catch (const std::bad_alloc&) {
+		return  StatusType::ALLOCATION_ERROR;
+	}
 }
 
 StatusType Racenion::add_contestant(int contestantId,

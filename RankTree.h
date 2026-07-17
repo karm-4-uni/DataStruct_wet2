@@ -402,7 +402,7 @@ public:
         return  true ;
     }
     bool  search(const S& key ) {
-        // check if the date is in the tree
+        // check if the key is in the tree
         return  search_recurcion( key,root);
     }
     bool remove(const S& key) {
@@ -608,57 +608,9 @@ NodePtr findByRank(int rank) const {
     }
 
     return nullptr;
-}NodePtr findByRank(int rank) const {
-    if (rank < 1 || rank > size) {
-        return nullptr;
-    }
-
-    NodePtr current = root;
-
-    while (current != nullptr) {
-        int leftSize =
-            current->leftSon
-                ? current->leftSon->getRank()
-                : 0;
-
-        if (rank == leftSize + 1) {
-            return current;
-        }
-
-        if (rank <= leftSize) {
-            current = current->leftSon;
-        } else {
-            rank -= leftSize + 1;
-            current = current->rightSon;
-        }
-    }
-
-    return nullptr;
 }
 
-    NodePtr findByRank(int rank) const {
-        if (rank < 1 || rank > size) {
-            return nullptr;
-        }
 
-        NodePtr current = root;
-
-        while (current != nullptr) {
-            int leftSize =
-                current->leftSon  ? current->leftSon->getRank()  : 0;
-            if (rank == leftSize + 1) {
-                return current;
-            }
-
-            if (rank <= leftSize) {
-                current = current->leftSon;
-            } else {
-                rank -= leftSize + 1;
-                current = current->rightSon;
-            }
-        }
-        return nullptr;
-    }
 
 };
 

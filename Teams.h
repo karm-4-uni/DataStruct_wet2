@@ -18,6 +18,10 @@ public:
     }
     ~Team() = default;
     void addContestantToTeam(NodeUF* newConstant);
+
+    int gettotalMotivation() const {
+        return  totalMotivation;
+    }
 };
 
 struct MotivationKey {
