@@ -1,3 +1,0 @@
-/mnt/c/Users/Admin/Documents/Spring2026/DATA_struct/Wet2/cmake-build-debug/CMakeFiles/Wet2.dir
-/mnt/c/Users/Admin/Documents/Spring2026/DATA_struct/Wet2/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/c/Users/Admin/Documents/Spring2026/DATA_struct/Wet2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
