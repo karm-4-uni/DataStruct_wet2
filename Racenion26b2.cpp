@@ -21,7 +21,30 @@ StatusType Racenion::add_contestant(int contestantId,
                                     int motivation,
                                     int missionsHad)
 {
-	return StatusType::FAILURE;
+	// checks valediction of inputs
+	if (contestantId <=0 || teamId <=0 || !skill.isValid() ||
+		motivation < 0 || missionsHad < 0) {
+		return StatusType::INVALID_INPUT;
+	}
+
+	// checks if the contestant is not already in, and the team is found
+	if (uf.isFound(contestantId) || teamsById.search(teamId) == false) {
+		return StatusType::FAILURE;
+	}
+
+	try {
+		// adds the new contestant to the hash table (O(1) in average)
+		uf.addContestantUF(contestantId, teamId, skill, motivation, missionsHad);
+
+		// add him to the relevant team (and maintain the changes)
+		auto teamPtr = teamsById.find(teamId);   // O(log(k))
+		teamPtr->addContestantToTeam(uf.getContestantPtr(contestantId));
+	}
+	catch (std::bad_alloc& er) {
+		return StatusType::ALLOCATION_ERROR;
+	}
+
+	return StatusType::SUCCESS;
 }
 
 output_t<int> Racenion::duel(int teamId1, int teamId2) {

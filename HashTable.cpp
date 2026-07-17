@@ -53,6 +53,7 @@ NodeUF* HashTable::find(int contestantId) {
 }
 
 bool HashTable::insert(NodeUF* contestant) {
+
     // if the contestant hase been joined before return false
     if (HashTable::find(contestant->contestantId) != nullptr) {
         return false;
