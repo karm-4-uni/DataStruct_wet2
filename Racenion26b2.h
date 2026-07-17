@@ -15,14 +15,16 @@
 #include "wet2util.h"
 #include "ContestantsAndTeamsUF.h"
 #include "AVLTree.h"
+#include "MyTable.h"
+#include "RankTree.h"
 #include "Teams.h"
 
 
 class Racenion {
 private:
 	ContestantsAndTeamsUF uf;
-	AVLTree<Team, int> teamsById;     // we have to modify the AVLTrees
-	AVLTree<Team, MotivationKey> teamsByMotivation;
+	RankedTree<Team, int> teamsById;     // we have to modify the AVLTrees
+	RankedTree<Team, MotivationKey> teamsByMotivation;
 
 public:
 	// <DO-NOT-MODIFY> {
