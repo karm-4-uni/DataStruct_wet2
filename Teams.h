@@ -22,6 +22,8 @@ public:
     int gettotalMotivation() const {
         return  totalMotivation;
     }
+
+
 };
 
 struct MotivationKey {

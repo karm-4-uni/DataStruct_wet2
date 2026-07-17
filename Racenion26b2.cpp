@@ -70,6 +70,15 @@ output_t<int> Racenion::get_team_experience(int teamId) {
 }
 
 output_t<int> Racenion::get_ith_collective_motivation_team(int i) {
+	if( i <= 0 || i > teamsById.getSize() ) {
+   return 	StatusType::FAILURE;
+	}
+	try {
+		return teamsByMotivation.findByRank(i).get()->key.teamId ;
+		// return two things ?? id or status or both 
+	} catch (const std::bad_alloc&) {
+		return  StatusType::ALLOCATION_ERROR;
+	}
 	return 0;
 }
 
