@@ -5,15 +5,17 @@
 #include "contestantsAndTeamsUF.h"
 
 class Team {
-    int teamId = 0;
-    NodeUF* rootNodeUF = nullptr;
-    int teamExp = 0;
-    int totalMotivation = 0;
-    int memberCnt = 0;
-    Skill totTeamSkill = Skill(); // for duel
+    int teamId ;
+    NodeUF* rootNodeUF ;
+    int teamExp ;
+    int totalMotivation ;
+    int memberCnt ;
+    Skill totTeamSkill ; // for duel
 
 public:
-    Team();
+    Team(int teamId) :teamId(teamId) , rootNodeUF(nullptr) , teamExp(0) , totalMotivation(0)
+    ,memberCnt(0) , totTeamSkill(Skill()){
+    }
     ~Team() = default;
     void addContestantToTeam(NodeUF* newConstant);
 };
@@ -22,7 +24,7 @@ struct MotivationKey {
     int motivation;
     int teamId;
 
-    explicit MotivationKey(int motivation = 0, int teamId = 0)
+    explicit MotivationKey(int motivation = 0 , int teamId )
         : motivation(motivation), teamId(teamId) {}
 
     bool operator==(const MotivationKey& other) const {

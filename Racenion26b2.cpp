@@ -8,7 +8,24 @@ Racenion::Racenion() {}
 Racenion::~Racenion() {}
 
 StatusType Racenion::add_team(int teamId) {
+
+	if(teamId <= 0) {
+		return  StatusType::INVALID_INPUT;
+	}
+	if (teamsById.find(teamId)) {
 	return StatusType::FAILURE;
+	}
+	try {
+		auto newteam = std::make_shared<Team>(teamId);
+		teamsById.insert( newteam  ,teamId);
+		MotivationKey secondKey = MotivationKey(teamId);
+		teamsByMotivation.insert(newteam,secondKey);
+
+
+	} catch (const std::bad_alloc&) {
+		return  StatusType::ALLOCATION_ERROR;
+	}
+
 }
 
 StatusType Racenion::remove_team(int teamId) {
