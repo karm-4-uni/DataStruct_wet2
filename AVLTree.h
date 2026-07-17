@@ -4,8 +4,6 @@
 #include <iostream>
 //#endif //AVLTREE_H
 
-
-
 #include <cmath>
 
 
@@ -441,53 +439,53 @@ public:
     //****************************************************************//
     // print the tree like paramid
     void printPyramid(std::ostream& os) const {
-        // if (!root) {
-        //     os << "Tree is empty.\n";
-        //     return;
-        // }
-        //
-        // std::queue<std::shared_ptr<Node<T,S>>> q;
-        // q.push(root);
-        //
-        // int currentLevel = 0;
-        // int maxLevel = root->height; // מניח שהגובה מעודכן נכון!
-        //
-        // os << "\n--- AVL Tree Pyramid ---\n\n";
-        //
-        // while (!q.empty() && currentLevel <= maxLevel) {
-        //     int levelNodes = q.size();
-        //
-        //     // חישוב הרווח ההתחלתי לשורה הנוכחית (כדי למרכז את הפירמידה)
-        //     int startSpaces = std::pow(2, maxLevel - currentLevel) - 1;
-        //     for (int i = 0; i < startSpaces; i++) {
-        //         os << "   "; // 3 רווחים לכל יחידת מרווח
-        //     }
-        //
-        //     for (int i = 0; i < levelNodes; i++) {
-        //         auto curr = q.front();
-        //         q.pop();
-        //
-        //         if (curr) {
-        //             // מדפיסים את המפתח. הוספתי [ ] כדי שייראה כמו צומת
-        //             os << "[" << curr->key << "]";
-        //             q.push(curr->leftSon);
-        //             q.push(curr->rightSon);
-        //         } else {
-        //             os << "   "; // מקום ריק אם אין צומת
-        //             q.push(nullptr);
-        //             q.push(nullptr);
-        //         }
-        //
-        //         // חישוב הרווח בין הצמתים באותה שורה
-        //         int betweenSpaces = std::pow(2, maxLevel - currentLevel + 1) - 1;
-        //         for (int j = 0; j < betweenSpaces; j++) {
-        //             os << "   ";
-        //         }
-        //     }
-        //     os << "\n\n"; // יורדים שורה בסיום כל רמה של העץ
-        //     currentLevel++;
-        // }
-        // os << "------------------------\n";
+        if (!root) {
+            os << "Tree is empty.\n";
+            return;
+        }
+
+        std::queue<std::shared_ptr<Node<T,S>>> q;
+        q.push(root);
+
+        int currentLevel = 0;
+        int maxLevel = root->height; // מניח שהגובה מעודכן נכון!
+
+        os << "\n--- AVL Tree Pyramid ---\n\n";
+
+        while (!q.empty() && currentLevel <= maxLevel) {
+            int levelNodes = q.size();
+
+            // חישוב הרווח ההתחלתי לשורה הנוכחית (כדי למרכז את הפירמידה)
+            int startSpaces = std::pow(2, maxLevel - currentLevel) - 1;
+            for (int i = 0; i < startSpaces; i++) {
+                os << "   "; // 3 רווחים לכל יחידת מרווח
+            }
+
+            for (int i = 0; i < levelNodes; i++) {
+                auto curr = q.front();
+                q.pop();
+
+                if (curr) {
+                    // מדפיסים את המפתח. הוספתי [ ] כדי שייראה כמו צומת
+                    os << "[" << curr->key << "]";
+                    q.push(curr->leftSon);
+                    q.push(curr->rightSon);
+                } else {
+                    os << "   "; // מקום ריק אם אין צומת
+                    q.push(nullptr);
+                    q.push(nullptr);
+                }
+
+                // חישוב הרווח בין הצמתים באותה שורה
+                int betweenSpaces = std::pow(2, maxLevel - currentLevel + 1) - 1;
+                for (int j = 0; j < betweenSpaces; j++) {
+                    os << "   ";
+                }
+            }
+            os << "\n\n"; // יורדים שורה בסיום כל רמה של העץ
+            currentLevel++;
+        }
+        os << "------------------------\n";
     }
     //****************************************************************//
     void printTree(std::ostream& os) {
