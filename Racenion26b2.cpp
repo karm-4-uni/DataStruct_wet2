@@ -2,11 +2,7 @@
 // However, you need to implement all public Racenion functions, which are provided below as a template.
 
 #include "Racenion26b2.h"
-enum class DuelExp {
-	DRAW = 0,
-	WIN  = 3
 
-};
 Racenion::Racenion() {}
 
 Racenion::~Racenion() {}
@@ -78,7 +74,7 @@ StatusType Racenion::add_contestant(int contestantId,
 }
 
 output_t<int> Racenion::duel(int teamId1, int teamId2) {
-// WE NEED to add all constant  missionsHad 
+// WE NEED to add all constant  missionsHad
 	if(teamId1 <= 0  || teamId2 <= 0 || (teamId1 == teamId2) ) {
 		return  StatusType::INVALID_INPUT ;
 	}
@@ -171,5 +167,18 @@ output_t<Skill> Racenion::get_partial_team_skill(int contestantId) {
 }
 
 StatusType Racenion::recruit(int recruitingTeamId, int recruitedTeamId) {
-	return StatusType::FAILURE;
+	if(recruitingTeamId <= 0  || recruitingTeamId <= 0 || (recruitingTeamId == recruitedTeamId) ) {
+		return  StatusType::INVALID_INPUT ;
+	}
+	try {
+		Team* temp_team1 = teamsById.find(recruitingTeamId);
+		Team* temp_team2 = teamsById.find(recruitedTeamId);
+		if(!temp_team1 || !temp_team2 ) {
+			return StatusType::FAILURE;
+		}
+
+		// write your code here 
+	} catch  (const std::bad_alloc&) {
+		return  StatusType::ALLOCATION_ERROR;
+	}
 }
