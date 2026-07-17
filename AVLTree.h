@@ -4,8 +4,6 @@
 #include <iostream>
 //#endif //AVLTREE_H
 
-// for the printPyramid only we have to remove in the final work //
-#include <queue>
 #include <cmath>
 
 
