@@ -12,4 +12,5 @@ add_executable(Wet2
     wet2util.h
         AVLTree.h
         RankTree.h
-        MyTable.h)
+        MyTable.h
+        HashTable.cpp)
