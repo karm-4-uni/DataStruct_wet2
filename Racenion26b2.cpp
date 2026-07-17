@@ -66,6 +66,20 @@ output_t<int> Racenion::get_contestant_missions_number(int contestantId) {
 }
 
 output_t<int> Racenion::get_team_experience(int teamId) {
+	if(teamId <=0 ) {
+		return  StatusType::INVALID_INPUT;
+	}
+	try {
+
+	Team* temp_team = teamsById.find(teamId);
+	if(temp_team  ) {
+		return temp_team->getTeamExp();
+	} else {
+		return  StatusType::FAILURE;
+	}
+	} catch (const std::bad_alloc&) {
+		return  StatusType::ALLOCATION_ERROR;
+	}
 	return 0;
 }
 
@@ -75,7 +89,7 @@ output_t<int> Racenion::get_ith_collective_motivation_team(int i) {
 	}
 	try {
 		return teamsByMotivation.findByRank(i).get()->key.teamId ;
-		// return two things ?? id or status or both 
+		// return two things ?? id or status or both// answer it dose manully
 	} catch (const std::bad_alloc&) {
 		return  StatusType::ALLOCATION_ERROR;
 	}

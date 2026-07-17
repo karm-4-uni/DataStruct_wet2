@@ -22,7 +22,9 @@ public:
     int gettotalMotivation() const {
         return  totalMotivation;
     }
-
+int getTeamExp() const {
+        return teamExp;
+    }
 
 };
 
