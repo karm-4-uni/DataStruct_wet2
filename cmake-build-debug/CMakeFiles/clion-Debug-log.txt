@@ -1,0 +1,4 @@
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /mnt/c/Users/Admin/Documents/Spring2026/DATA_struct/Wet2 -B /mnt/c/Users/Admin/Documents/Spring2026/DATA_struct/Wet2/cmake-build-debug
+-- Configuring done (0.1s)
+-- Generating done (0.3s)
+-- Build files have been written to: /mnt/c/Users/Admin/Documents/Spring2026/DATA_struct/Wet2/cmake-build-debug
