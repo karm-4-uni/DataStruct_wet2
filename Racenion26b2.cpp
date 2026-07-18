@@ -152,8 +152,11 @@ output_t<int> Racenion::get_contestant_missions_number(int contestantId) {
 		}
 
 		int missionNum = uf.getMissionNumRec(contestantPtr);
+		if (missionNum < 0) {
+			return StatusType::FAILURE;
+		}
 
-		return output_t<int>(missionNum);
+		return missionNum;
 	}
 	catch (std::bad_alloc& e) {
 		return StatusType::ALLOCATION_ERROR;
@@ -192,7 +195,26 @@ output_t<int> Racenion::get_ith_collective_motivation_team(int i) {
 }
 
 output_t<Skill> Racenion::get_partial_team_skill(int contestantId) {
-	return Skill();
+	try {
+		if (contestantId <= 0) {
+			return StatusType::INVALID_INPUT;
+		}
+
+		NodeUF* contestantPtr = uf.getContestantPtr(contestantId);
+		if (contestantPtr == nullptr) {
+			return StatusType::FAILURE;  // he is not found
+		}
+
+		Skill partialTeamSkill = uf.getPartialTeamSkillRec(contestantPtr);
+		if (partialTeamSkill == Skill::invalid()) {
+			return StatusType::FAILURE;
+		}
+
+		return partialTeamSkill;
+	}
+	catch (std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
+	}
 }
 
 StatusType Racenion::recruit(int recruitingTeamId, int recruitedTeamId) {
