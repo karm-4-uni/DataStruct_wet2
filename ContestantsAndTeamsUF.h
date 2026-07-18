@@ -30,29 +30,26 @@ struct NodeUF {
     ~NodeUF() = default;
 };
 
-//*************************************************************************//
+//****************************************************************************//
 // Union Find class //
 class ContestantsAndTeamsUF {
 private:
 
     HashTable contestantIndex;   // contestant Id --> pointer to NodeUF
+//****************************************************************************//
+    // helper func //
 
-//*************************************************************************//
-// inter face //
+    //****************************************************************************//
+
+    // inter face //
+
 public:
-
     ContestantsAndTeamsUF() = default;
 
     ~ContestantsAndTeamsUF() = default;
 
-    bool addContestantUF(int contestantId,
-                              int teamId,
-                              const Skill &skill,
-                              int motivation,
-                              int missionsHad);
-
-    // returns the root of the set (O(log*n))
-    NodeUF* Find(int contestantId);
+    bool addContestantUF(int contestantId, int teamId, const Skill &skill,
+        int motivation, int missionsHad);
 
     // (return ptr to the new root)
     NodeUF* UnionNodes(NodeUF* recruitingRoot, NodeUF* recruitedRoot);
@@ -65,6 +62,7 @@ public:
     // return ptr to the NodeUF that containing the contestant (O(1) in average)
     NodeUF* getContestantPtr(int contestantId);
 
+    int getMissionNumRec(NodeUF* contesPtr);
 };
 
 #endif //UNIONFIND_H

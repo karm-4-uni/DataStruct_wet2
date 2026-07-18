@@ -141,7 +141,23 @@ output_t<int> Racenion::duel(int teamId1, int teamId2) {
 }
 
 output_t<int> Racenion::get_contestant_missions_number(int contestantId) {
-	return 0;
+	try {
+		if (contestantId <= 0) {
+			return StatusType::INVALID_INPUT;
+		}
+
+		NodeUF* contestantPtr = uf.getContestantPtr(contestantId);
+		if (contestantPtr == nullptr) {
+			return StatusType::FAILURE;  // he is not found
+		}
+
+		int missionNum = uf.getMissionNumRec(contestantPtr);
+
+		return output_t<int>(missionNum);
+	}
+	catch (std::bad_alloc& e) {
+		return StatusType::ALLOCATION_ERROR;
+	}
 }
 
 output_t<int> Racenion::get_team_experience(int teamId) {
