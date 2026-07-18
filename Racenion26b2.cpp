@@ -3,9 +3,9 @@
 
 #include "Racenion26b2.h"
 
-Racenion::Racenion() {}
+//Racenion::Racenion() {}
 
-Racenion::~Racenion() {}
+//Racenion::~Racenion() {}
 
 StatusType Racenion::add_team(int teamId) {
 
@@ -54,23 +54,36 @@ StatusType Racenion::add_contestant(int contestantId,
                                     int motivation,
                                     int missionsHad)
 {
-	if((teamId<= 0 || contestantId <= 0 || motivation < 0 || missionsHad < 0
-|| !skill.isValid() )) {
-
+	// checks valediction of inputs
+	if (contestantId <=0 || teamId <=0 || !skill.isValid() ||
+		motivation < 0 || missionsHad < 0) {
 		return StatusType::INVALID_INPUT;
 	}
-	try {
-		Team* temp_team = teamsById.find(teamId);
-		if(!temp_team  ) {
-			return  StatusType::FAILURE;
-		}
-		// write your codee here
 
-		//
-	} catch  (const std::bad_alloc&) {
-		return  StatusType::ALLOCATION_ERROR;
+	// checks if the contestant is not already in, and the team is found
+	if (uf.isFound(contestantId) || teamsById.search(teamId) == false) {
+		return StatusType::FAILURE;
 	}
 
+	try {
+		// adds the new contestant to the hash table (O(1) in average)
+		uf.addContestantUF(contestantId, teamId, skill, motivation, missionsHad);
+
+		auto teamPtr = teamsById.find(teamId);   // O(log(k))
+		int teamMotiv = teamPtr->gettotalMotivation();
+		// add him to the team by add..Team fun (and maintain the changes aloso)
+		// to save the right order on the tree
+		// we remove the team from the tree and insert it again after change
+		teamsByMotivation.remove(MotivationKey(teamMotiv, teamId));
+		teamPtr->addContestantToTeam(uf.getContestantPtr(contestantId));
+		// I am not sure if this going to compile :) (because: std::shared_ptr<Team>(teamPtr))
+		teamsByMotivation.insert(std::shared_ptr<Team>(teamPtr), MotivationKey(teamMotiv, teamId));
+	}
+	catch (std::bad_alloc& er) {
+		return StatusType::ALLOCATION_ERROR;
+	}
+
+	return StatusType::SUCCESS;
 }
 
 output_t<int> Racenion::duel(int teamId1, int teamId2) {
@@ -155,7 +168,7 @@ output_t<int> Racenion::get_ith_collective_motivation_team(int i) {
 	}
 	try {
 		return teamsByMotivation.findByRank(i).get()->key.teamId ;
-		// return two things ?? id or status or both// answer it dose manully
+		// return two things ?? id or status or both// answer it dose manully //
 	} catch (const std::bad_alloc&) {
 		return  StatusType::ALLOCATION_ERROR;
 	}

@@ -1,4 +1,6 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /mnt/c/Users/Admin/Documents/Spring2026/DATA_struct/Wet2 -B /mnt/c/Users/Admin/Documents/Spring2026/DATA_struct/Wet2/cmake-build-debug
--- Configuring done (0.1s)
--- Generating done (0.3s)
--- Build files have been written to: /mnt/c/Users/Admin/Documents/Spring2026/DATA_struct/Wet2/cmake-build-debug
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_CXX_FLAGS=-Wall -pedantic-errors -Werror" -G "Unix Makefiles" -S "/mnt/c/Users/win 11/CS_Dgree/semester_4/DataSruct1/Wet02/DataStruct_wet2" -B "/mnt/c/Users/win 11/CS_Dgree/semester_4/DataSruct1/Wet02/DataStruct_wet2/cmake-build-debug"
+CMake Error at CMakeLists.txt:1 (cmake_minimum_required):
+  CMake 4.2 or higher is required.  You are running version 3.28.3
+
+
+-- Configuring incomplete, errors occurred!

@@ -29,8 +29,8 @@ private:
 public:
 	// <DO-NOT-MODIFY> {
 
-	Racenion();
-	virtual ~Racenion();
+	Racenion() = default;
+	virtual ~Racenion() = default;
 
 	StatusType add_team(int teamId);
 
