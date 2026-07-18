@@ -177,7 +177,6 @@ StatusType Racenion::recruit(int recruitingTeamId, int recruitedTeamId) {
 			return StatusType::FAILURE;
 		}
 
-		// write your code here 
 	} catch  (const std::bad_alloc&) {
 		return  StatusType::ALLOCATION_ERROR;
 	}
