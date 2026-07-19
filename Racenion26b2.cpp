@@ -224,37 +224,64 @@ StatusType Racenion::recruit(int recruitingTeamId, int recruitedTeamId) {
 	try {
 		Team* recruitingTeamPtr = teamsById.find(recruitingTeamId);
 		Team* recruitedTeamPtr = teamsById.find(recruitedTeamId);
+
 		if(!recruitingTeamPtr || !recruitedTeamPtr ) {
 			return StatusType::FAILURE;
 		}
-
 		// write your code here
-		// union the teams roots
-		NodeUF* newRoot = uf.UnionNodes(recruitedTeamPtr->getRootNudeUfPtr(),
-			recruitingTeamPtr->getRootNudeUfPtr());
+		auto recruitingTeamSharedPtr =
+			teamsByMotivation.find_sherd(MotivationKey(recruitingTeamPtr->gettotalMotivation(), recruitingTeamId));
 
-		// set the new root
-		recruitingTeamPtr->setRootNudeUfPtr(newRoot);
-
-		// the motivation of the recruiting team well change
-		// we have to remove and insert again after the change
+		int recruitingTeamCon = 0;
+		Skill* recruitingTotSkill = recruitingTeamPtr->getTeamSkills();
+		int recruitingMemCnt = recruitingTeamPtr->getMemCnt();
+		int recruitingExp = recruitingTeamPtr->getTeamExp();
 		int recruitingTeamMot = recruitingTeamPtr->gettotalMotivation();
+		int recruitingEffSkill =
+			recruitingTeamPtr->getTeamSkills()->getEffectiveSkill();
+		recruitingTeamCon += recruitingExp +
+			recruitingTeamMot + recruitingEffSkill;
+
+
+		int recruitedTeamCon = 0;
+		Skill* recruitedTotSkill = recruitedTeamPtr->getTeamSkills();
+		int recruitedMemCnt = recruitedTeamPtr->getMemCnt();
+		int recruitedExp = recruitedTeamPtr->getTeamExp();
 		int recruitedTeamMot = recruitedTeamPtr->gettotalMotivation();
-		// the remove
-		MotivationKey recruitingTeamKey = MotivationKey(recruitedTeamId,recruitingTeamMot);
-		teamsByMotivation.remove(recruitingTeamKey);
-		// the change
-		int newTotalMotivation = recruitingTeamMot + recruitedTeamMot;
-		recruitingTeamPtr->setTotalMotivation(newTotalMotivation);
-		recruitingTeamKey.motivation = newTotalMotivation;
-		// the insertion
-		teamsByMotivation.insert(std::shared_ptr<Team>(recruitingTeamPtr),
-			recruitingTeamKey);
+		int recruitedEffSkill =
+			recruitedTeamPtr->getTeamSkills()->getEffectiveSkill();
+		recruitedTeamCon += recruitedExp +
+			recruitedTeamMot + recruitedEffSkill;
 
-		// remove the recruited team
-		teamsByMotivation.remove
-		    (MotivationKey(recruitingTeamMot, recruitedTeamId));
+		if (recruitingTeamCon > recruitedTeamCon && recruitingMemCnt > 0) {
+			// Union the roots
+			NodeUF* newRoot = uf.UnionNodes(recruitingTeamPtr->getRootNudeUfPtr(),
+											recruitedTeamPtr->getRootNudeUfPtr());
+			recruitingTeamPtr->setRootNudeUfPtr(newRoot);
 
+			// Remove BOTH teams from the motivation tree BEFORE changing their stats
+			teamsByMotivation.remove(MotivationKey(recruitingTeamMot, recruitingTeamId));
+			teamsByMotivation.remove(MotivationKey(recruitedTeamMot, recruitedTeamId));
+
+			// Remove the recruited team completely from the main data structure
+			teamsById.remove(recruitedTeamId);
+
+			// Update all fields of the recruiting team
+			recruitingTeamPtr->setTotalMotivation(recruitingTeamMot + recruitedTeamMot);
+			recruitingTeamPtr->setTeamExp(recruitingExp + recruitedExp);
+			recruitingTeamPtr->setMemCnt(recruitingMemCnt + recruitedMemCnt);
+
+			// (A * B) - Correct non-commutative multiplication order
+			recruitingTeamPtr->setTotSkill((*recruitingTotSkill) * (*recruitedTotSkill));
+
+			// Insert the updated recruiting team back into the motivation tree
+			MotivationKey newKey(recruitingTeamPtr->gettotalMotivation(), recruitingTeamId);
+			teamsByMotivation.insert(recruitingTeamSharedPtr, newKey);
+
+			return StatusType::SUCCESS;
+		} else {
+			return StatusType::FAILURE;
+		}
 	} catch  (const std::bad_alloc&) {
 		return  StatusType::ALLOCATION_ERROR;
 	}

@@ -417,6 +417,9 @@ public:
     T* find(const S& key) {
         return  find_recurction(key ,root);
     }
+    const std::shared_ptr<T>& find_sherd(const S& key) {
+        return  find_recurction_ptr(key ,root);
+    }
     std::shared_ptr<T> find_ptr(const S& key)  // return shared ptr
     {
         return  find_recurction_ptr(key ,root);

@@ -43,13 +43,25 @@ bool isEmpty() const {
     NodeUF* getRootNudeUfPtr();
 
     void setRootNudeUfPtr(NodeUF* newRoot);
+
+    void setTeamExp(int newExp) {
+        teamExp = newExp;
+    }
+
+    void setMemCnt(int newCnt) {
+        memberCnt = newCnt;
+    }
+
+    int getMemCnt() {return memberCnt;}
+
+    void setTotSkill(Skill newTotSkill) {totTeamSkill = newTotSkill;}
 };
 
 struct MotivationKey {
     int motivation;
     int teamId;
 
-    explicit MotivationKey(int motivation = 0 , int teamId )
+    explicit MotivationKey(int motivation = 0 , int teamId = 0)
         : motivation(motivation), teamId(teamId) {}
 
     bool operator==(const MotivationKey& other) const {
