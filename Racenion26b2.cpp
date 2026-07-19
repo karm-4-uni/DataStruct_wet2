@@ -69,15 +69,12 @@ StatusType Racenion::add_contestant(int contestantId,
 		// adds the new contestant to the hash table (O(1) in average)
 		uf.addContestantUF(contestantId, teamId, skill, motivation, missionsHad);
 
-		auto teamPtr = teamsById.find(teamId);   // O(log(k))
-		int teamMotiv = teamPtr->gettotalMotivation();
-		// add him to the team by add..Team fun (and maintain the changes aloso)
-		// to save the right order on the tree
-		// we remove the team from the tree and insert it again after change
+		auto teamSharedPtr = teamsById.find_sherd(teamId);
+		if (!teamSharedPtr) return StatusType::FAILURE;
+		int teamMotiv = teamSharedPtr->gettotalMotivation();
 		teamsByMotivation.remove(MotivationKey(teamMotiv, teamId));
-		teamPtr->addContestantToTeam(uf.getContestantPtr(contestantId));
-		// I am not sure if this going to compile :) (because: std::shared_ptr<Team>(teamPtr))
-		teamsByMotivation.insert(std::shared_ptr<Team>(teamPtr), MotivationKey(teamMotiv, teamId));
+		teamSharedPtr->addContestantToTeam(uf.getContestantPtr(contestantId));
+		teamsByMotivation.insert(teamSharedPtr, MotivationKey(teamMotiv, teamId));
 	}
 	catch (std::bad_alloc& er) {
 		return StatusType::ALLOCATION_ERROR;
@@ -121,7 +118,7 @@ output_t<int> Racenion::duel(int teamId1, int teamId2) {
 				temp_team1->addExp(1);
 			return  0 ;	//draw
 			}
-			if( first_team_skill > second_team_skill ) {
+			if( *first_team_skill > *second_team_skill ) {
 				temp_team1->addExp(3);
 				return  2 ;  //FIRST_WON_SKILL,
 			} else {
