@@ -130,7 +130,7 @@ output_t<int> Racenion::duel(int teamId1, int teamId2) {
 				temp_team1->addExp(3);
 				return  1 ;  //FIRST_WON_POWERL,
 			} else {
-				temp_team1->addExp(3);
+				temp_team2->addExp(3);
 				return  3 ; //SECOND_WON_POWER
 			}
 		}
@@ -256,10 +256,11 @@ StatusType Racenion::recruit(int recruitingTeamId, int recruitedTeamId) {
 
 		if (recruitingTeamCon > recruitedTeamCon && recruitingMemCnt > 0) {
 			// Union the roots
-			NodeUF* newRoot = uf.UnionNodes(recruitingTeamPtr->getRootNudeUfPtr(),
-											recruitedTeamPtr->getRootNudeUfPtr());
-			recruitingTeamPtr->setRootNudeUfPtr(newRoot);
-
+			if (recruitedTeamPtr > 0) {
+				NodeUF* newRoot = uf.UnionNodes(recruitingTeamPtr->getRootNudeUfPtr(),
+												recruitedTeamPtr->getRootNudeUfPtr());
+				recruitingTeamPtr->setRootNudeUfPtr(newRoot);
+			}
 			// Remove BOTH teams from the motivation tree BEFORE changing their stats
 			teamsByMotivation.remove(MotivationKey(recruitingTeamMot, recruitingTeamId));
 			teamsByMotivation.remove(MotivationKey(recruitedTeamMot, recruitedTeamId));
