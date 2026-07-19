@@ -14,7 +14,7 @@ bool ContestantsAndTeamsUF::addContestantUF(int contestantId, int teamId,
 
     // if the cond is true, he is already in
     if (!contestantIndex.insert(newNodeUF)) {
-        std::free(newNodeUF);
+        delete newNodeUF;
         return false;
     }
 
