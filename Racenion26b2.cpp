@@ -87,7 +87,7 @@ StatusType Racenion::add_contestant(int contestantId,
 }
 
 output_t<int> Racenion::duel(int teamId1, int teamId2) {
-// WE NEED to add all constant  missionsHad
+// WE NEED to add all constant  missionsHad // Done
 	if(teamId1 <= 0  || teamId2 <= 0 || (teamId1 == teamId2) ) {
 		return  StatusType::INVALID_INPUT ;
 	}
@@ -107,12 +107,16 @@ output_t<int> Racenion::duel(int teamId1, int teamId2) {
 				return StatusType::FAILURE;
 			}
 		}
+		// add one mission to all the contestant
+		temp_team1->getRootNudeUfPtr()->relativeMissions++;
+		temp_team2->getRootNudeUfPtr()->relativeMissions++;
+
 		int first_team_power = temp_team1->gettotalMotivation() + temp_team1->getTeamExp();
 		int second_team_power = temp_team2->gettotalMotivation() + temp_team2->getTeamExp();
 		if(first_team_power == second_team_power) {
 			Skill* first_team_skill = temp_team1->getTeamSkills();
 			Skill* second_team_skill = temp_team2->getTeamSkills();
-			if(first_team_skill == second_team_skill) {
+			if(*first_team_skill == *second_team_skill) { // not comparing pointers
 				temp_team1->addExp(1);
 				temp_team1->addExp(1);
 			return  0 ;	//draw
@@ -151,7 +155,7 @@ output_t<int> Racenion::get_contestant_missions_number(int contestantId) {
 			return StatusType::FAILURE;  // he is not found
 		}
 
-		int missionNum = uf.getMissionNumRec(contestantPtr);
+		int missionNum = uf.getRelativeFieldsRec(contestantPtr).first;
 		if (missionNum < 0) {
 			return StatusType::FAILURE;
 		}
@@ -205,7 +209,7 @@ output_t<Skill> Racenion::get_partial_team_skill(int contestantId) {
 			return StatusType::FAILURE;  // he is not found
 		}
 
-		Skill partialTeamSkill = uf.getPartialTeamSkillRec(contestantPtr);
+		Skill partialTeamSkill = uf.getRelativeFieldsRec(contestantPtr).second;
 		if (partialTeamSkill == Skill::invalid()) {
 			return StatusType::FAILURE;
 		}
@@ -218,16 +222,70 @@ output_t<Skill> Racenion::get_partial_team_skill(int contestantId) {
 }
 
 StatusType Racenion::recruit(int recruitingTeamId, int recruitedTeamId) {
-	if(recruitingTeamId <= 0  || recruitingTeamId <= 0 || (recruitingTeamId == recruitedTeamId) ) {
+	if(recruitingTeamId <= 0  || recruitedTeamId <= 0 || (recruitingTeamId == recruitedTeamId) ) {
 		return  StatusType::INVALID_INPUT ;
 	}
 	try {
-		Team* temp_team1 = teamsById.find(recruitingTeamId);
-		Team* temp_team2 = teamsById.find(recruitedTeamId);
-		if(!temp_team1 || !temp_team2 ) {
+		Team* recruitingTeamPtr = teamsById.find(recruitingTeamId);
+		Team* recruitedTeamPtr = teamsById.find(recruitedTeamId);
+
+		if(!recruitingTeamPtr || !recruitedTeamPtr ) {
 			return StatusType::FAILURE;
 		}
+		// write your code here
+		auto recruitingTeamSharedPtr =
+			teamsByMotivation.find_sherd(MotivationKey(recruitingTeamPtr->gettotalMotivation(), recruitingTeamId));
 
+		int recruitingTeamCon = 0;
+		Skill* recruitingTotSkill = recruitingTeamPtr->getTeamSkills();
+		int recruitingMemCnt = recruitingTeamPtr->getMemCnt();
+		int recruitingExp = recruitingTeamPtr->getTeamExp();
+		int recruitingTeamMot = recruitingTeamPtr->gettotalMotivation();
+		int recruitingEffSkill =
+			recruitingTeamPtr->getTeamSkills()->getEffectiveSkill();
+		recruitingTeamCon += recruitingExp +
+			recruitingTeamMot + recruitingEffSkill;
+
+
+		int recruitedTeamCon = 0;
+		Skill* recruitedTotSkill = recruitedTeamPtr->getTeamSkills();
+		int recruitedMemCnt = recruitedTeamPtr->getMemCnt();
+		int recruitedExp = recruitedTeamPtr->getTeamExp();
+		int recruitedTeamMot = recruitedTeamPtr->gettotalMotivation();
+		int recruitedEffSkill =
+			recruitedTeamPtr->getTeamSkills()->getEffectiveSkill();
+		recruitedTeamCon += recruitedExp +
+			recruitedTeamMot + recruitedEffSkill;
+
+		if (recruitingTeamCon > recruitedTeamCon && recruitingMemCnt > 0) {
+			// Union the roots
+			NodeUF* newRoot = uf.UnionNodes(recruitingTeamPtr->getRootNudeUfPtr(),
+											recruitedTeamPtr->getRootNudeUfPtr());
+			recruitingTeamPtr->setRootNudeUfPtr(newRoot);
+
+			// Remove BOTH teams from the motivation tree BEFORE changing their stats
+			teamsByMotivation.remove(MotivationKey(recruitingTeamMot, recruitingTeamId));
+			teamsByMotivation.remove(MotivationKey(recruitedTeamMot, recruitedTeamId));
+
+			// Remove the recruited team completely from the main data structure
+			teamsById.remove(recruitedTeamId);
+
+			// Update all fields of the recruiting team
+			recruitingTeamPtr->setTotalMotivation(recruitingTeamMot + recruitedTeamMot);
+			recruitingTeamPtr->setTeamExp(recruitingExp + recruitedExp);
+			recruitingTeamPtr->setMemCnt(recruitingMemCnt + recruitedMemCnt);
+
+			// (A * B) - Correct non-commutative multiplication order
+			recruitingTeamPtr->setTotSkill((*recruitingTotSkill) * (*recruitedTotSkill));
+
+			// Insert the updated recruiting team back into the motivation tree
+			MotivationKey newKey(recruitingTeamPtr->gettotalMotivation(), recruitingTeamId);
+			teamsByMotivation.insert(recruitingTeamSharedPtr, newKey);
+
+			return StatusType::SUCCESS;
+		} else {
+			return StatusType::FAILURE;
+		}
 	} catch  (const std::bad_alloc&) {
 		return  StatusType::ALLOCATION_ERROR;
 	}

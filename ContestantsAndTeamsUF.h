@@ -5,6 +5,7 @@
 // #include <memory>
 #include "HashTable.h"
 #include "wet2util.h"
+#include <utility>
 
 //*************************************************************************//
 // nodes for UF class evry node for one contestant //
@@ -13,11 +14,11 @@ struct NodeUF {
     int teamId = 0;
     NodeUF* parent = nullptr;
     int size = 0;                 // used for the union (to ensure O(log*n))
-    const Skill skill = Skill();
+    const Skill skill = Skill::identity();
     int motivation = 0;
     int missionsHad = 0;
-    int RelativeMissionsOff = 0;
-    Skill relativeSkill;
+    int relativeMissions = 0;
+    Skill relativeSkill = Skill::identity();
     bool isEliminated = false;   // set once, at the root, when remove_team happens
 
     NodeUF() = default;
@@ -62,9 +63,7 @@ public:
     // return ptr to the NodeUF that containing the contestant (O(1) in average)
     NodeUF* getContestantPtr(int contestantId);
 
-    int getMissionNumRec(NodeUF* contestPtr);
-
-    Skill getPartialTeamSkillRec(NodeUF* contestPtr);
+    std::pair<int, Skill> getRelativeFieldsRec(NodeUF* contestPtr);
 };
 
 #endif //UNIONFIND_H

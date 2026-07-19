@@ -27,7 +27,15 @@ void Team::addContestantToTeam(NodeUF* newConstant) {
     newConstant->relativeSkill = rootInvRelativeSkill * newMemRelativeSkill;
 
     // relative missions
-    int rootRelativeMissions = rootNodeUF->RelativeMissionsOff;
-    int newMemRelativeMissions = newConstant->RelativeMissionsOff;
-    newConstant->RelativeMissionsOff -= rootRelativeMissions;
+    int rootRelativeMissions = rootNodeUF->relativeMissions;
+    int newMemRelativeMissions = newConstant->relativeMissions;
+    newConstant->relativeMissions -= rootRelativeMissions;
+}
+
+NodeUF* Team::getRootNudeUfPtr() {
+    return rootNodeUF;
+}
+
+void Team::setRootNudeUfPtr(NodeUF* newRoot) {
+    rootNodeUF = newRoot;
 }
