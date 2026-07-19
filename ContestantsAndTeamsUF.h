@@ -5,6 +5,7 @@
 // #include <memory>
 #include "HashTable.h"
 #include "wet2util.h"
+#include <utility>
 
 //*************************************************************************//
 // nodes for UF class evry node for one contestant //
@@ -16,7 +17,7 @@ struct NodeUF {
     const Skill skill = Skill();
     int motivation = 0;
     int missionsHad = 0;
-    int RelativeMissionsOff = 0;
+    int relativeMissions = 0;
     Skill relativeSkill;
     bool isEliminated = false;   // set once, at the root, when remove_team happens
 
@@ -65,6 +66,8 @@ public:
     int getMissionNumRec(NodeUF* contestPtr);
 
     Skill getPartialTeamSkillRec(NodeUF* contestPtr);
+
+    std::pair<int, Skill> getRelativeFieldsRec(NodeUF* contestPtr);
 };
 
 #endif //UNIONFIND_H

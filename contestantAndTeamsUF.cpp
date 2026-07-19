@@ -1,6 +1,7 @@
 
 #include "ContestantsAndTeamsUF.h"
 
+
 //****************************************************************************//
     // helper func //
 
@@ -20,7 +21,7 @@ bool ContestantsAndTeamsUF::addContestantUF(int contestantId, int teamId,
     newNodeUF->size++;
 
     // this we be modified by the team
-    newNodeUF->RelativeMissionsOff = missionsHad;
+    newNodeUF->relativeMissions = missionsHad;
 
     return true;
 }
@@ -31,7 +32,7 @@ NodeUF* ContestantsAndTeamsUF::UnionNodes(NodeUF* recruitingRoot,
 }
 
 Skill ContestantsAndTeamsUF::getEffectiveSkill(int contestantId) {
-
+    return contestantIndex.find(contestantId)->skill;
 }
 
 bool ContestantsAndTeamsUF::isFound(int contestantId) {
@@ -45,73 +46,48 @@ NodeUF* ContestantsAndTeamsUF::getContestantPtr(int contestantId) {
     return contestantIndex.find(contestantId);
 }
 
-int ContestantsAndTeamsUF::getMissionNumRec(NodeUF* contestPtr) {
+std::pair<int, Skill> ContestantsAndTeamsUF::getRelativeFieldsRec(NodeUF* contestPtr) {
 
     if (contestPtr == nullptr) {
-        return 0;
+        return std::make_pair(0, Skill::identity());
     }
 
     // he is the root
     if (contestPtr->parent == nullptr) {
-        return contestPtr->RelativeMissionsOff;
-    }
-
-    // his parent is the root (in this case, we just sum)
-    if (contestPtr->parent->parent == nullptr) {
-        int missionCnt = contestPtr->RelativeMissionsOff;
-        missionCnt += contestPtr->parent->RelativeMissionsOff;
-
-        return missionCnt;
-    }
-
-    // get the sum on the search path
-    int missionCnt = getMissionNumRec(contestPtr->parent);
-    missionCnt += contestPtr->RelativeMissionsOff;
-
-    // The parent of my parent is now definitively the root!
-    NodeUF* rootNode = contestPtr->parent->parent;
-
-    // maintain the field (the sum minus the root relative field)
-    contestPtr->RelativeMissionsOff = missionCnt - rootNode->RelativeMissionsOff;
-
-    // connect to the root
-    contestPtr->parent = rootNode;
-
-    return missionCnt;
-}
-
-Skill ContestantsAndTeamsUF::getPartialTeamSkillRec(NodeUF* contestPtr) {
-
-    if (contestPtr == nullptr) {
-        return Skill::invalid();
-    }
-
-    // he is the root
-    if (contestPtr->parent == nullptr) {
-        return contestPtr->relativeSkill;
+        return  std::make_pair(contestPtr->relativeMissions, contestPtr->relativeSkill);
     }
 
     // his parent is the root
     if (contestPtr->parent->parent == nullptr) {
+        // mission relative field
+        int missionCnt = contestPtr->relativeMissions;
+        missionCnt += contestPtr->parent->relativeMissions;
+        // skill relative field
         Skill skillCnt = contestPtr->parent->relativeSkill;
         skillCnt *= contestPtr->relativeSkill; // root*son (the order is matter)
-
-        return skillCnt;
+        return std::make_pair(missionCnt, skillCnt);
     }
 
-    // get the multiplication on the search path (A1 * A2 * ... * A3)
-    Skill skillCnt = getPartialTeamSkillRec(contestPtr->parent);
+    std::pair<int, Skill> missionSkillCnt = getRelativeFieldsRec(contestPtr->parent);
+    // get the sum of the mission relative field
+    // on the search path to the root
+    int missionCnt = missionSkillCnt.first;
+    missionCnt += contestPtr->relativeMissions;
+
+    // get the multiplication of the skill relative field (mul : A1 * A2 * ... * A3)
+    // on the search path to the root
+    Skill skillCnt = missionSkillCnt.second;
     skillCnt *= contestPtr->relativeSkill;
 
     // The parent of my parent is now definitively the root!
     NodeUF* rootNode = contestPtr->parent->parent;
 
-    // maintain the relative field
-    // (the inverse of the root relative field multiplied by the tot multiplication)
+    // maintain the relative fields
+    contestPtr->relativeMissions = missionCnt - rootNode->relativeMissions;
     contestPtr->relativeSkill = rootNode->relativeSkill.inv() * skillCnt;
 
     // connect to the root
     contestPtr->parent = rootNode;
 
-    return skillCnt;
+    return std::make_pair(missionCnt, skillCnt);
 }
