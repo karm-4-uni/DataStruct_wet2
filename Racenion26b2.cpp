@@ -87,7 +87,7 @@ StatusType Racenion::add_contestant(int contestantId,
 }
 
 output_t<int> Racenion::duel(int teamId1, int teamId2) {
-// WE NEED to add all constant  missionsHad
+// WE NEED to add all constant  missionsHad // Done
 	if(teamId1 <= 0  || teamId2 <= 0 || (teamId1 == teamId2) ) {
 		return  StatusType::INVALID_INPUT ;
 	}
@@ -107,12 +107,16 @@ output_t<int> Racenion::duel(int teamId1, int teamId2) {
 				return StatusType::FAILURE;
 			}
 		}
+		// add one mission to all the contestant
+		temp_team1->getRootNudeUfPtr()->relativeMissions++;
+		temp_team2->getRootNudeUfPtr()->relativeMissions++;
+
 		int first_team_power = temp_team1->gettotalMotivation() + temp_team1->getTeamExp();
 		int second_team_power = temp_team2->gettotalMotivation() + temp_team2->getTeamExp();
 		if(first_team_power == second_team_power) {
 			Skill* first_team_skill = temp_team1->getTeamSkills();
 			Skill* second_team_skill = temp_team2->getTeamSkills();
-			if(first_team_skill == second_team_skill) {
+			if(*first_team_skill == *second_team_skill) { // not comparing pointers
 				temp_team1->addExp(1);
 				temp_team1->addExp(1);
 			return  0 ;	//draw
