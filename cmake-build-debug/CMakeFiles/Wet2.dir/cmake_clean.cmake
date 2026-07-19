@@ -4,6 +4,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Wet2.dir/HashTable.cpp.o.d"
   "CMakeFiles/Wet2.dir/Racenion26b2.cpp.o"
   "CMakeFiles/Wet2.dir/Racenion26b2.cpp.o.d"
+  "CMakeFiles/Wet2.dir/contestantAndTeamsUF.cpp.o"
+  "CMakeFiles/Wet2.dir/contestantAndTeamsUF.cpp.o.d"
   "CMakeFiles/Wet2.dir/main26b2.cpp.o"
   "CMakeFiles/Wet2.dir/main26b2.cpp.o.d"
   "Wet2"

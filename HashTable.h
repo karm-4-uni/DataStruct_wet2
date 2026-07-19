@@ -3,8 +3,8 @@
 #define HASHTABLE_H
 
 #include <memory>
-#include "ContestantsAndTeamsUF.h"
 
+#include "NodeUF.h"
 
 class HashTable {
 private:

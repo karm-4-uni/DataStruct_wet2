@@ -13,4 +13,6 @@ add_executable(Wet2
         AVLTree.h
         RankTree.h
         MyTable.h
-        HashTable.cpp)
+        HashTable.cpp
+        NodeUF.h
+        contestantAndTeamsUF.cpp)

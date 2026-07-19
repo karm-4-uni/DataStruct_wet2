@@ -1,5 +1,5 @@
+#include "ContestantsAndTeamsUF.h"
 
-#include "HashTable.h"
 // helper func //
 int HashTable::hashFunc(int Id) {
     return Id % maxSize;

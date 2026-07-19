@@ -1,7 +1,7 @@
 
 #ifndef TEAMS_H
 #define TEAMS_H
-
+#include "NodeUF.h"
 #include "contestantsAndTeamsUF.h"
 
 class Team {
@@ -29,7 +29,7 @@ int getTeamExp() const {
         return teamExp;
     }
 bool isEmpty() const {
-        return rootNodeUF;
+        return !(rootNodeUF);
     }
 
     Skill* getTeamSkills()  {

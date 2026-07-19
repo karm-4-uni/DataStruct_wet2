@@ -385,7 +385,7 @@ class RankedTree {
         }
     };
 public:
-    RankedTree(T* data = nullptr,S key = 0) :root(nullptr), size(0) {
+    RankedTree(T* data = nullptr,S key = S()) :root(nullptr), size(0) {
     }
     ~RankedTree() = default ;
 

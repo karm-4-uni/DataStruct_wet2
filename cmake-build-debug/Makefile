@@ -184,6 +184,30 @@ Racenion26b2.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Wet2.dir/build.make CMakeFiles/Wet2.dir/Racenion26b2.cpp.s
 .PHONY : Racenion26b2.cpp.s
 
+contestantAndTeamsUF.o: contestantAndTeamsUF.cpp.o
+.PHONY : contestantAndTeamsUF.o
+
+# target to build an object file
+contestantAndTeamsUF.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Wet2.dir/build.make CMakeFiles/Wet2.dir/contestantAndTeamsUF.cpp.o
+.PHONY : contestantAndTeamsUF.cpp.o
+
+contestantAndTeamsUF.i: contestantAndTeamsUF.cpp.i
+.PHONY : contestantAndTeamsUF.i
+
+# target to preprocess a source file
+contestantAndTeamsUF.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Wet2.dir/build.make CMakeFiles/Wet2.dir/contestantAndTeamsUF.cpp.i
+.PHONY : contestantAndTeamsUF.cpp.i
+
+contestantAndTeamsUF.s: contestantAndTeamsUF.cpp.s
+.PHONY : contestantAndTeamsUF.s
+
+# target to generate assembly for a file
+contestantAndTeamsUF.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Wet2.dir/build.make CMakeFiles/Wet2.dir/contestantAndTeamsUF.cpp.s
+.PHONY : contestantAndTeamsUF.cpp.s
+
 main26b2.o: main26b2.cpp.o
 .PHONY : main26b2.o
 
@@ -224,6 +248,9 @@ help:
 	@echo "... Racenion26b2.o"
 	@echo "... Racenion26b2.i"
 	@echo "... Racenion26b2.s"
+	@echo "... contestantAndTeamsUF.o"
+	@echo "... contestantAndTeamsUF.i"
+	@echo "... contestantAndTeamsUF.s"
 	@echo "... main26b2.o"
 	@echo "... main26b2.i"
 	@echo "... main26b2.s"
