@@ -22,6 +22,9 @@ public:
     int gettotalMotivation() const {
         return  totalMotivation;
     }
+    void setTotalMotivation(int newTot) {
+        totalMotivation = newTot;
+    }
 int getTeamExp() const {
         return teamExp;
     }
@@ -36,6 +39,10 @@ bool isEmpty() const {
     void addExp(int add_i) {
         teamExp += add_i;
     }
+
+    NodeUF* getRootNudeUfPtr();
+
+    void setRootNudeUfPtr(NodeUF* newRoot);
 };
 
 struct MotivationKey {

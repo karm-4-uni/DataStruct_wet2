@@ -14,11 +14,11 @@ struct NodeUF {
     int teamId = 0;
     NodeUF* parent = nullptr;
     int size = 0;                 // used for the union (to ensure O(log*n))
-    const Skill skill = Skill();
+    const Skill skill = Skill::identity();
     int motivation = 0;
     int missionsHad = 0;
     int relativeMissions = 0;
-    Skill relativeSkill;
+    Skill relativeSkill = Skill::identity();
     bool isEliminated = false;   // set once, at the root, when remove_team happens
 
     NodeUF() = default;

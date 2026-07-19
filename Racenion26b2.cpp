@@ -218,17 +218,43 @@ output_t<Skill> Racenion::get_partial_team_skill(int contestantId) {
 }
 
 StatusType Racenion::recruit(int recruitingTeamId, int recruitedTeamId) {
-	if(recruitingTeamId <= 0  || recruitingTeamId <= 0 || (recruitingTeamId == recruitedTeamId) ) {
+	if(recruitingTeamId <= 0  || recruitedTeamId <= 0 || (recruitingTeamId == recruitedTeamId) ) {
 		return  StatusType::INVALID_INPUT ;
 	}
 	try {
-		Team* temp_team1 = teamsById.find(recruitingTeamId);
-		Team* temp_team2 = teamsById.find(recruitedTeamId);
-		if(!temp_team1 || !temp_team2 ) {
+		Team* recruitingTeamPtr = teamsById.find(recruitingTeamId);
+		Team* recruitedTeamPtr = teamsById.find(recruitedTeamId);
+		if(!recruitingTeamPtr || !recruitedTeamPtr ) {
 			return StatusType::FAILURE;
 		}
 
-		// write your code here 
+		// write your code here
+		// union the teams roots
+		NodeUF* newRoot = uf.UnionNodes(recruitedTeamPtr->getRootNudeUfPtr(),
+			recruitingTeamPtr->getRootNudeUfPtr());
+
+		// set the new root
+		recruitingTeamPtr->setRootNudeUfPtr(newRoot);
+
+		// the motivation of the recruiting team well change
+		// we have to remove and insert again after the change
+		int recruitingTeamMot = recruitingTeamPtr->gettotalMotivation();
+		int recruitedTeamMot = recruitedTeamPtr->gettotalMotivation();
+		// the remove
+		MotivationKey recruitingTeamKey = MotivationKey(recruitedTeamId,recruitingTeamMot);
+		teamsByMotivation.remove(recruitingTeamKey);
+		// the change
+		int newTotalMotivation = recruitingTeamMot + recruitedTeamMot;
+		recruitingTeamPtr->setTotalMotivation(newTotalMotivation);
+		recruitingTeamKey.motivation = newTotalMotivation;
+		// the insertion
+		teamsByMotivation.insert(std::shared_ptr<Team>(recruitingTeamPtr),
+			recruitingTeamKey);
+
+		// remove the recruited team
+		teamsByMotivation.remove
+		    (MotivationKey(recruitingTeamMot, recruitedTeamId));
+
 	} catch  (const std::bad_alloc&) {
 		return  StatusType::ALLOCATION_ERROR;
 	}

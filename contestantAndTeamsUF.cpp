@@ -28,7 +28,41 @@ bool ContestantsAndTeamsUF::addContestantUF(int contestantId, int teamId,
 
 NodeUF* ContestantsAndTeamsUF::UnionNodes(NodeUF* recruitingRoot,
                                           NodeUF* recruitedRoot) {
+    if (recruitedRoot == nullptr
+        || recruitingRoot == nullptr) {
+        return nullptr;
+    }
+    if (recruitedRoot->size < recruitingRoot->size) {
+        // recruitingRoot will be the new root
+        recruitedRoot->parent = recruitingRoot;
 
+        // maintain the relative fields (no need to change the Skill relative)
+        // mission:
+        recruitedRoot->relativeMissions -= recruitingRoot->relativeMissions;
+        // skill: (no change)
+
+        recruitingRoot->size += recruitedRoot->size;
+        recruitedRoot->teamId = recruitingRoot->teamId;
+
+        return recruitingRoot;
+    } else {
+        // recruitedRoot will be the new root
+        recruitingRoot->parent = recruitedRoot;
+
+        // maintain the relative fields
+        // mission:
+        recruitingRoot->relativeMissions -= recruitedRoot->relativeMissions;
+        // skill:
+        recruitedRoot->relativeSkill =
+            recruitingRoot->relativeSkill * recruitedRoot->relativeSkill;
+        recruitingRoot->relativeSkill =
+            recruitedRoot->relativeSkill.inv() * recruitingRoot->relativeSkill;
+
+        recruitedRoot->size += recruitingRoot->size;
+        recruitedRoot->teamId = recruitingRoot->teamId;
+
+        return recruitedRoot;
+    }
 }
 
 Skill ContestantsAndTeamsUF::getEffectiveSkill(int contestantId) {

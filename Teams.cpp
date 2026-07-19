@@ -31,3 +31,11 @@ void Team::addContestantToTeam(NodeUF* newConstant) {
     int newMemRelativeMissions = newConstant->relativeMissions;
     newConstant->relativeMissions -= rootRelativeMissions;
 }
+
+NodeUF* Team::getRootNudeUfPtr() {
+    return rootNodeUF;
+}
+
+void Team::setRootNudeUfPtr(NodeUF* newRoot) {
+    rootNodeUF = newRoot;
+}
