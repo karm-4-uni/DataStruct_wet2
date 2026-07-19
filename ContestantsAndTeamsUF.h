@@ -63,10 +63,6 @@ public:
     // return ptr to the NodeUF that containing the contestant (O(1) in average)
     NodeUF* getContestantPtr(int contestantId);
 
-    int getMissionNumRec(NodeUF* contestPtr);
-
-    Skill getPartialTeamSkillRec(NodeUF* contestPtr);
-
     std::pair<int, Skill> getRelativeFieldsRec(NodeUF* contestPtr);
 };
 

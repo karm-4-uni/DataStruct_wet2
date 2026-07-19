@@ -151,7 +151,7 @@ output_t<int> Racenion::get_contestant_missions_number(int contestantId) {
 			return StatusType::FAILURE;  // he is not found
 		}
 
-		int missionNum = uf.getMissionNumRec(contestantPtr);
+		int missionNum = uf.getRelativeFieldsRec(contestantPtr).first;
 		if (missionNum < 0) {
 			return StatusType::FAILURE;
 		}
@@ -205,7 +205,7 @@ output_t<Skill> Racenion::get_partial_team_skill(int contestantId) {
 			return StatusType::FAILURE;  // he is not found
 		}
 
-		Skill partialTeamSkill = uf.getPartialTeamSkillRec(contestantPtr);
+		Skill partialTeamSkill = uf.getRelativeFieldsRec(contestantPtr).second;
 		if (partialTeamSkill == Skill::invalid()) {
 			return StatusType::FAILURE;
 		}
